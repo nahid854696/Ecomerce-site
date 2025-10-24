@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/templatemo-hexashop.css' %}">
+</head>
+<body>
+    <header class="header-area header-sticky">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav" style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
+                         <a href="{% url 'index' %}" class="logo">
+                             <img src="{% static 'images/logo.png' %}">
+                         </a>
+                         <ul class="nav" style="display: flex; gap: 15px; align-items: center;">
+                             <li><a href="{% url 'index' %}">Home</a></li>
+                             <li><a href="{% url 'products' %}">Products</a></li>
+                             <li><a href="{% url 'view_cart' %}"><i class="fa fa-shopping-cart"></i> Cart ({{ cart_count }})</a></li>
+                             <li><a href="{% url 'profile' %}"><i class="fa fa-user"></i> Profile</a></li>
+                             <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> Logout</a></li>
+                         </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mt-10" style="margin-top: 100px;">
+        <h2 class="pt-5">Profile</h2>
+        <h3 class="pt-2">Welcome, {{ user.username }}</h3>
+        <p>Username: {{ user.username }}</p>
+        <p>Email: {{ user.email }}</p>
+        <p>First Name: {{ user.first_name }}</p>
+        <p>Last Name: {{ user.last_name }}</p>
+
+        <h3 class="pt-5 ">Your Orders</h3>
+        {% if orders %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Status</th>
+                        <th>Total Amount</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td>{{ order.id }}</td>
+                            <td>{{ order.status }}</td>
+                            <td>${{ order.total_amount }}</td>
+                            <td>{{ order.created_at|date:"M d, Y" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>You have no orders yet.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

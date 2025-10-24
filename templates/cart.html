@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/templatemo-hexashop.css">
+</head>
+<body>
+    <header class="header-area header-sticky">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav" style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
+                        <a href="/index/" class="logo">
+                            <img src="/static/images/logo.png">
+                        </a>
+                        <ul class="nav" style="display: flex; gap: 15px; align-items: center;">
+                            <li><a href="/index/">Home</a></li>
+                            <li><a href="/products/">Products</a></li>
+                            <li><a href="/cart/"><i class="fa fa-shopping-cart"></i> Cart ({{ cart_count }})</a></li>
+                            {% if user.is_authenticated %}
+                                <li><a href="/profile/"><i class="fa fa-user"></i> Profile</a></li>
+                                <li><a href="/logout/"><i class="fa fa-sign-out"></i> Logout</a></li>
+                            {% else %}
+                                <li><a href="/login/"><i class="fa fa-sign-in"></i> Login</a></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container pt-5" style="margin-top: 100px;">
+        <h2>Your Cart</h2>
+        {% if cart_items %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                        <tr>
+                            <td>{{ item.item.name }}</td>
+                            <td>
+                                <form action="/cart/update/{{ item.item.id }}/" method="post" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1" style="width: 60px;">
+                                    <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                                </form>
+                            </td>
+                            <td>${{ item.item.price }}</td>
+                            <td>${{ item.total_price }}</td>
+                            <td><a href="/cart/remove/{{ item.item.id }}/" class="btn btn-sm btn-danger">Remove</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <h3>Total: ${{ total }}</h3>
+            <a href="/checkout/" class="btn btn-success mt-5">Checkout</a>
+        {% else %}
+            <p class="pt-2">Your cart is empty.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
